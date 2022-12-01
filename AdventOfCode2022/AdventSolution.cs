@@ -1,8 +1,8 @@
 ﻿namespace AdventOfCode2022;
 
-internal abstract class AdventSolution
+internal interface AdventSolution
 {
-    public abstract IEnumerable<string> GetSolutions(IEnumerable<string> input);
+    public IEnumerable<string> GetSolutions(IEnumerable<string> input);
 }
 
 internal static class SolutionGetter

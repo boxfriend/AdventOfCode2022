@@ -1,7 +1,7 @@
 ﻿namespace AdventOfCode2022;
 internal class DayOne : AdventSolution
 {
-    public override IEnumerable<string> GetSolutions(IEnumerable<string> input)
+    public IEnumerable<string> GetSolutions(IEnumerable<string> input)
     {
         const int numberOfEntries = 3; //Top three elves carrying most calories
 
