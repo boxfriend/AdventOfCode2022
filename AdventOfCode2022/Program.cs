@@ -13,3 +13,9 @@ string dayTwoFile = Path.Join(inputFolder, "daytwo.txt");
 var dayTwoOutput = await SolutionGetter.GetSolutions<DayTwo>(dayTwoFile);
 foreach (var s in dayTwoOutput)
     Console.WriteLine(s);
+
+Console.WriteLine("Day Three: Rucksack Reorganization");
+string dayThreeFile = Path.Join(inputFolder, "daythree.txt");
+var dayThreeOutput = await SolutionGetter.GetSolutions<DayThree>(dayThreeFile);
+foreach (var s in dayThreeOutput)
+    Console.WriteLine(s);
