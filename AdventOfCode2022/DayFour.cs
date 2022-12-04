@@ -8,10 +8,10 @@ internal class DayFour : AdventSolution
 
         foreach(var pair in input)
         {
-            var pairs = GetRanges(pair);
-            if (DoesOverlap(pairs))
+            var ranges = GetRangePair(pair);
+            if (DoesOverlap(ranges))
                 overlaps++;
-            if(IsFullyContained(pairs))
+            if(IsFullyContained(ranges))
                 fullyContained++;
         }
 
@@ -22,28 +22,30 @@ internal class DayFour : AdventSolution
         };
     }
 
-    private static Pair GetRanges(string input)
+    private static Pair GetRangePair(string input)
     {
         var ranges = input.Split(',');
         var firstRange = GetRangeFromInput(ranges[0]);
         var secondRange = GetRangeFromInput(ranges[1]);
 
         return new(firstRange, secondRange);
+        
+        
+        static Range GetRangeFromInput(string input)
+        {
+            var numbers = input.Split('-');
+
+            var min = int.Parse(numbers[0]);
+            var max = int.Parse(numbers[1]);
+
+            return new(min, max);
+        }
     }
 
-    private static Range GetRangeFromInput(string input)
-    {
-        var numbers = input.Split('-');
-
-        var min = int.Parse(numbers[0]);
-        var max = int.Parse(numbers[1]);
-
-        return new(min, max);
-    }
     private static bool IsFullyContained (Pair pair) => IsFullyContained(pair.First, pair.Second);
     private static bool IsFullyContained(Range first, Range second) => 
-        (first.Min <= second.Min && first.Max >= second.Max) ||
-        (second.Min <= first.Min && second.Max >= first.Max);
+        (InRange(first, second.Min) && InRange(first, second.Max)) ||
+        (InRange(second, first.Min) && InRange(second, first.Max));
 
     private static bool DoesOverlap (Pair pair) => DoesOverlap(pair.First, pair.Second);
     private static bool DoesOverlap(Range first, Range second)
@@ -58,6 +60,7 @@ internal class DayFour : AdventSolution
     }
 
     private static bool InRange(Range range, int toCheck) => range.Min <= toCheck && range.Max >= toCheck;
+
     private record struct Range(int Min, int Max);
     private record struct Pair(Range First, Range Second);
 }
