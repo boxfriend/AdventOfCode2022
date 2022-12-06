@@ -31,3 +31,9 @@ string dayFiveFile = Path.Join(inputFolder, "dayfive.txt");
 var dayFiveOutput = await SolutionGetter.GetSolutions<DayFive>(dayFiveFile);
 foreach (var s in dayFiveOutput)
     Console.WriteLine(s);
+
+Console.WriteLine("Day Six: Tuning Trouble");
+string daySixFile = Path.Join(inputFolder, "daysix.txt");
+var daySixOutput = await SolutionGetter.GetSolutions<DaySix>(daySixFile);
+foreach (var s in daySixOutput)
+    Console.WriteLine(s);
