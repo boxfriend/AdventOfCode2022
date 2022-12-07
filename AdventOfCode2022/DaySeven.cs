@@ -10,25 +10,11 @@ internal class DaySeven : AdventSolution
         ProcessCommands(input);
         var sum = SumDirectories(_root, 100000);
 
-        var freeSpace = 70000000L - _root.Size;
-        var spaceNeeded = 30000000L - freeSpace + 100000; 
-        /*
-         * Adding that 100k from part one here also works for some unknown reason
-         * did i perhaps miss a part of the prompt? am i blind for still not seeing it?
-         */
+        var freeSpace = 70000000 - _root.Size;
+        var spaceNeeded = 30000000 - freeSpace;
 
-        var sufficientDirectories = new List<long>();
+        var sufficientDirectories = new List<int>();
         FindLargeEnoughDirectories(_root, spaceNeeded, sufficientDirectories);
-        
-        //sufficientDirectories.Remove(sufficientDirectories.Min()); 
-        /*
-         * I don't understand why this was necessary
-         * The value being removed here met the requirements but the site did not accept it as an answer
-         * 70000000 - 43159555 = 26840445
-         * 30000000 - 26840445 = 3159555
-         * 3180034 > 3159555 == true
-         * 
-        */
 
         var smallestSufficientSize = sufficientDirectories.Min();
 
@@ -50,13 +36,19 @@ internal class DaySeven : AdventSolution
                 continue;
             }
 
-            if(contents.Count > 0)
+            PopulateDir();
+
+            ProcessCommand(command);
+        }
+        PopulateDir(); //remember kids, don't forget to process *all* instances of an ls command
+
+        void PopulateDir()
+        {
+            if (contents.Count > 0)
             {
                 _workingDirectory.Populate(contents);
                 contents.Clear();
             }
-
-            ProcessCommand(command);
         }
     }
 
@@ -69,7 +61,7 @@ internal class DaySeven : AdventSolution
         ChangeFolder(commandParts[2]);
     }
 
-    private long SumDirectories(Directory root, long maxSize)
+    private static int SumDirectories(Directory root, int maxSize)
     {
         var size = root.Size;
         var sum = size <= maxSize ? size : 0;
@@ -81,7 +73,7 @@ internal class DaySeven : AdventSolution
         return sum;
     }
 
-    private void FindLargeEnoughDirectories(Directory root, long minSize, List<long> sufficientDirectories)
+    private static void FindLargeEnoughDirectories(Directory root, int minSize, List<int> sufficientDirectories)
     {
         foreach (var directory in root.Folders.Values)
             FindLargeEnoughDirectories(directory, minSize, sufficientDirectories);
@@ -113,18 +105,11 @@ internal class DaySeven : AdventSolution
         public Dictionary<string, Directory> Folders { get; init; } = new();
         public Directory? ParentFolder { get; init; }
         public List<File> Files { get; init; } = new();
+        private int _fileSize = 0;
         public bool IsPopulated => Folders.Count + Files.Count > 0;
         public Directory() : this(null) { }
         public Directory(Directory? parent) => ParentFolder = parent;
-        public long Size => (Files.Sum(x => x.Size) + Folders.Sum(x => x.Value.Size));
-        
-        
-        public static Directory BuildNewDirectory(IEnumerable<string> input, Directory parent)
-        {
-            var dir = new Directory(parent);
-            dir.Populate(input);
-            return dir;
-        }
+        public int Size => _fileSize + Folders.Sum(x => x.Value.Size);
 
         public void Populate(IEnumerable<string> input)
         {
@@ -142,10 +127,12 @@ internal class DaySeven : AdventSolution
                     Folders.Add(parts[1], new(this));
                 } else
                 {
-                    Files.Add(new File(parts[1], long.Parse(parts[0])));
+                    var size = int.Parse(parts[0]);
+                    Files.Add(new File(parts[1], size));
+                    _fileSize += size;
                 }
             }
         }
     }
-    private record File(string Name, long Size);
+    private record File(string Name, int Size);
 }
