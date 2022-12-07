@@ -37,3 +37,9 @@ string daySixFile = Path.Join(inputFolder, "daysix.txt");
 var daySixOutput = await SolutionGetter.GetSolutions<DaySix>(daySixFile);
 foreach (var s in daySixOutput)
     Console.WriteLine(s);
+
+Console.WriteLine("Day Seven: No Space Left On Device");
+string daySevenFile = Path.Join(inputFolder, "dayseven.txt");
+var daySevenOutput = await SolutionGetter.GetSolutions<DaySeven>(daySevenFile);
+foreach (var s in daySevenOutput)
+    Console.WriteLine(s);
