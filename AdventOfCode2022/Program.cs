@@ -12,6 +12,7 @@ await GetSolution<DaySeven>("dayseven.txt", "Day Seven: No Space Left On Device"
 await GetSolution<DayEight>("dayeight.txt", "Day Eight: Treetop Tree House");
 await GetSolution<DayNine>("daynine.txt", "Day Nine: Rope Bridge");
 await GetSolution<DayTen>("dayten.txt", "Day Ten: Cathode-Ray Tube");
+await GetSolution<DayEleven>("dayeleven.txt", "Day Eleven: Monkey in the Middle");
 
 async static Task GetSolution<T>(string fileName, string dayTitle) where T : AdventSolution, new()
 {
