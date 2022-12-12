@@ -57,32 +57,32 @@ internal class DayNine : AdventSolution
         } * distance;
     }
 
-    private record struct Point(int X, int Y)
+}
+public record struct Point(int X, int Y)
+{
+    public static Point Zero => new(0, 0);
+    public static Point Up => new(0, 1);
+    public static Point Down => new(0, -1);
+    public static Point Right => new(1, 0);
+    public static Point Left => new(-1, 0);
+
+    public static Point operator + (Point a, Point b) => new(a.X + b.X, a.Y + b.Y);
+    public static Point operator - (Point a, Point b) => new(a.X - b.X, a.Y - b.Y);
+    public static Point operator * (Point a, int b) => new(a.X * b, a.Y * b);
+
+    public bool IsAdjacent(Point toCheck)
     {
-        public static Point Zero => new(0, 0);
-        public static Point Up => new(0, 1);
-        public static Point Down => new(0, -1);
-        public static Point Right => new(1, 0);
-        public static Point Left => new(-1, 0);
+        var distance = Direction(this, toCheck);
 
-        public static Point operator + (Point a, Point b) => new(a.X + b.X, a.Y + b.Y);
-        public static Point operator - (Point a, Point b) => new(a.X - b.X, a.Y - b.Y);
-        public static Point operator * (Point a, int b) => new(a.X * b, a.Y * b);
+        return Math.Abs(distance.X) <= 1 && Math.Abs(distance.Y) <= 1;
+    }
 
-        public bool IsAdjacent(Point toCheck)
-        {
-            var distance = Direction(this, toCheck);
+    public static Point Direction (Point from, Point to) => to - from;
 
-            return Math.Abs(distance.X) <= 1 && Math.Abs(distance.Y) <= 1;
-        }
+    public Point MoveTowards(Point to)
+    {
+        var direction = Direction(this, to);
 
-        public static Point Direction (Point from, Point to) => to - from;
-
-        public Point MoveTowards(Point to)
-        {
-            var direction = Direction(this, to);
-
-            return this + new Point(Math.Sign(direction.X), Math.Sign(direction.Y));
-        }
+        return this + new Point(Math.Sign(direction.X), Math.Sign(direction.Y));
     }
 }
