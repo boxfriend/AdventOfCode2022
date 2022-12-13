@@ -14,7 +14,7 @@ internal class DayTwelve : AdventSolution
         }
         var startPosition = new Point(0, 0);
         var endPosition = new Point(0, 0);
-
+        var aPositions = new List<Point>();
         for(var i = 0; i < positions.GetLength(0); i++)
         {
             for(var j = 0; j < positions.GetLength(1); j++)
@@ -23,14 +23,38 @@ internal class DayTwelve : AdventSolution
                     endPosition = new(i, j);
                 if (positions[i, j] == 'S')
                     startPosition = new(i, j);
+                if (positions[i, j] == 'a')
+                    aPositions.Add(new(i, j));
             }
         }
         var count = MinimumStepsToDestination(startPosition, endPosition, positions);
+        
+        //TODO: choose a better algorithm and learn how to use it
+/*
+        var sortedA = aPositions.OrderBy(x => Distance(x, endPosition));
+        var minStepsToA = int.MaxValue;
+        foreach (var pos in sortedA)
+        {
+            if (Distance(pos, endPosition) >= minStepsToA)
+                break;
 
+            var steps = MinimumStepsToDestination(pos, endPosition, positions);
+            minStepsToA = Math.Min(steps, minStepsToA);
+        }
+        //She's too slow cap'n
+*/
         return new string[]
         {
-            $"Minimum Steps to end: {count}"
+            $"Minimum Steps to end: {count}",
+            //$"Min steps to an A position: {minStepsToA}"
         };
+    
+    }
+
+    private int Distance (Point a, Point b)
+    {
+        var dir = b - a;
+        return Math.Abs(dir.X) + Math.Abs(dir.Y);
     }
 
     //This is a pretty basic version of the A* algorithm
@@ -50,22 +74,21 @@ internal class DayTwelve : AdventSolution
             EvaluateSuccessors(pos.point, pos.parent);
         }
 
-
         var count = 0;
-        var nextPosition = closedPositions[destination].Parent;
-        while(nextPosition != null)
+        if (!closedPositions.TryGetValue(destination, out Node nextPosition))
+            return int.MaxValue;
+        
+        while(nextPosition.Parent != null)
         {
             nextPosition = nextPosition.Parent;
             count++;
         }
 
-
         return count;
         
         void EvaluateSuccessors(Point point, Node parent)
         {
-            var hPoint = point - destination;
-            var h = Math.Abs(hPoint.X) + Math.Abs(hPoint.Y);
+            var h = Distance(point, destination);
 
             var node = (point != origin) ? new Node(parent, parent.MoveCost + 1, h) : parent;
 
